@@ -1,9 +1,14 @@
 package com.example.microservice_students.model
 
-import java.util.Date
+import jakarta.persistence.*
+import java.time.LocalDate
 
+@Table(name = "Students")
+@Entity(name = "Student")
 data class Student(
-        val id: Long,
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        var id: Long,
         val name: String,
-        val dateBirth: Date
+        val dateBirth: LocalDate
 )
