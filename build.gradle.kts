@@ -35,6 +35,7 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("io.mockk:mockk:1.9.3")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
