@@ -2,22 +2,36 @@ package com.example.microservice_students.controller
 
 import com.example.microservice_students.model.Student
 import com.example.microservice_students.service.CreateStudentsService
+import com.example.microservice_students.service.FindStudentsService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-class StudentsController(var createStudentsService: CreateStudentsService) {
+@RequestMapping(value = ["/students"], produces = ["application/json"])
+class StudentsController(private var createStudentsService: CreateStudentsService, private var findStudentsService: FindStudentsService) {
 
-    @PostMapping("/create/students")
+    @PostMapping("/create")
     fun createStudents(@RequestBody student: Student): ResponseEntity<String> {
         val createdStudent = createStudentsService.createStudents(student)
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                     .body(String.format("Estudante criado. Nome: ${createdStudent.name} / Id: ${createdStudent.id}"))
+    }
+
+    @GetMapping("/all")
+    fun getAllStudents(@RequestParam(required = false) page: Int,
+                       @RequestParam(required = false) pageSize: Int): ResponseEntity<String> {
+        val pageSizeValue: Int = if(pageSize < 1) 1 else pageSize
+
+        val allStudents = findStudentsService.getAllStudents(page, pageSizeValue)
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(String.format("Estudantes encontrados: \n " +
+                        allStudents.joinToString
+                        { s -> "Id: ".plus(s.id).plus(" - Nome: ").plus(s.name) }))
     }
 
 }

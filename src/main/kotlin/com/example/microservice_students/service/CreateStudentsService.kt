@@ -6,7 +6,7 @@ import com.example.microservice_students.repository.StudentsRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CreateStudentsService(val studentsRepository: StudentsRepository) {
+class CreateStudentsService(private val studentsRepository: StudentsRepository) {
     fun createStudents(student: Student): Student {
         if (studentsRepository.existsByNameAndDateBirth(student.name, student.dateBirth)) {
             throw StudentsExistsException("O aluno: [${student.name}], já existe na base de dados.")
