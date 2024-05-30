@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 @Service
-class FindStudentsService(val studentsRepository: StudentsRepository) {
+class FindStudentsService(private val studentsRepository: StudentsRepository) {
 
     fun getAllStudents(page: Int, pageSize: Int) : List<Student> {
         val pageRequest = PageRequest.of(page, pageSize)
