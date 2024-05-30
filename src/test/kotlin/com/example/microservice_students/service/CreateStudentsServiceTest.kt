@@ -1,6 +1,6 @@
 package com.example.microservice_students.service
 
-import com.example.microservice_students.exception.StudentsFoundException
+import com.example.microservice_students.exception.StudentsExistsException
 import com.example.microservice_students.model.Student
 import com.example.microservice_students.repository.StudentsRepository
 import io.mockk.MockKAnnotations
@@ -44,7 +44,7 @@ class CreateStudentsServiceTest {
     fun shouldThrowStudentsFoundException() {
         every { studentsRepository.existsByNameAndDateBirth("Leo", LocalDate.parse("2020-10-16")) } returns true
 
-        assertThrows<StudentsFoundException> { createStudentsService.createStudents(studentMock) }
+        assertThrows<StudentsExistsException> { createStudentsService.createStudents(studentMock) }
     }
 
 
