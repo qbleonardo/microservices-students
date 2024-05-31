@@ -2,7 +2,9 @@ package com.example.microservice_students.controller
 
 import com.example.microservice_students.model.Student
 import com.example.microservice_students.service.CreateStudentsService
+import com.example.microservice_students.service.DeleteStudentsService
 import com.example.microservice_students.service.FindStudentsService
+import com.example.microservice_students.service.PutStudentsService
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -20,6 +22,12 @@ class StudentsControllerTest {
 
     @MockK
     lateinit var findStudentsService: FindStudentsService
+
+    @MockK
+    lateinit var putStudentsService: PutStudentsService
+
+    @MockK
+    lateinit var deleteStudentsService: DeleteStudentsService
 
     @InjectMockKs
     lateinit var controller: StudentsController
@@ -51,5 +59,21 @@ class StudentsControllerTest {
         assertEquals(HttpStatus.OK, resultController.statusCode)
     }
 
+    @Test
+    fun shouldReturnStatusCode200_whenUpdateDateBirth(){
+        every { putStudentsService.updateStudentsDateBirth(LocalDate.parse("2024-01-01"), 1L) } returns Unit
 
+        val resultController = controller.updateStudent(1L, LocalDate.parse("2024-01-01"))
+
+        assertEquals(HttpStatus.OK, resultController.statusCode)
+    }
+
+    @Test
+    fun shouldReturnStatusCode200_whenDeleteStudents(){
+        every { deleteStudentsService.removeStudentsById(1L) } returns Unit
+
+        val resultController = controller.removeStudents(1L)
+
+        assertEquals(HttpStatus.OK, resultController.statusCode)
+    }
 }
