@@ -1,4 +1,4 @@
-package com.example.microservice_students.model
+package com.example.microservice_students.domain.model
 
 import jakarta.persistence.*
 import java.time.LocalDate

@@ -1,10 +1,8 @@
-package com.example.microservice_students.controller
+package com.example.microservice_students.application.controller
 
-import com.example.microservice_students.model.Student
-import com.example.microservice_students.service.CreateStudentsService
-import com.example.microservice_students.service.DeleteStudentsService
-import com.example.microservice_students.service.FindStudentsService
-import com.example.microservice_students.service.PutStudentsService
+import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
+import com.example.microservice_students.domain.model.Student
+import com.example.microservice_students.domain.service.StudentsService
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -18,16 +16,7 @@ import java.time.LocalDate
 class StudentsControllerTest {
 
     @MockK
-    lateinit var createStudentsService: CreateStudentsService
-
-    @MockK
-    lateinit var findStudentsService: FindStudentsService
-
-    @MockK
-    lateinit var putStudentsService: PutStudentsService
-
-    @MockK
-    lateinit var deleteStudentsService: DeleteStudentsService
+    lateinit var studentsService: StudentsService
 
     @InjectMockKs
     lateinit var controller: StudentsController
@@ -43,7 +32,7 @@ class StudentsControllerTest {
 
     @Test
     fun shouldReturnStatusCode201_whenCreatedStudents() {
-        every { createStudentsService.createStudents(studentMock) } returns studentMock
+        every { studentsService.createStudents(studentMock) } returns studentMock
 
         val resultController = controller.createStudents(studentMock)
 
@@ -52,7 +41,7 @@ class StudentsControllerTest {
 
     @Test
     fun shouldReturnStatusCode200_whenFoundStudents(){
-        every { findStudentsService.getAllStudents(0,1) } returns studentList
+        every { studentsService.getAllStudents(0,1) } returns studentList
 
         val resultController = controller.getAllStudents(0, 1)
 
@@ -61,19 +50,19 @@ class StudentsControllerTest {
 
     @Test
     fun shouldReturnStatusCode200_whenUpdateDateBirth(){
-        every { putStudentsService.updateStudentsDateBirth(LocalDate.parse("2024-01-01"), 1L) } returns Unit
+        every { studentsService.updateStudentsDateBirth(LocalDate.parse("2024-01-01"), 1L) } returns Unit
 
-        val resultController = controller.updateStudent(1L, LocalDate.parse("2024-01-01"))
+        val resultController = controller.updateStudent(1L, UpdateDateBirthRequest(LocalDate.parse("2024-01-01")))
 
         assertEquals(HttpStatus.OK, resultController.statusCode)
     }
 
     @Test
     fun shouldReturnStatusCode200_whenDeleteStudents(){
-        every { deleteStudentsService.removeStudentsById(1L) } returns Unit
+        every { studentsService.removeStudentsById(1L) } returns Unit
 
         val resultController = controller.removeStudents(1L)
 
-        assertEquals(HttpStatus.OK, resultController.statusCode)
+        assertEquals(HttpStatus.NO_CONTENT, resultController.statusCode)
     }
 }

@@ -1,0 +1,12 @@
+spring:
+    jpa:
+        database: POSTGRESQL
+        hibernate:
+            ddl-auto: update
+    database:
+        DriverClassName: org.postgresql.Driver
+    datasource:
+        url: jdbc:postgresql://localhost:5432/postgres
+        username: postgres
+        password: password
+        platform: postgres
