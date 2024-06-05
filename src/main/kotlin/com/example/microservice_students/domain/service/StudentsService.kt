@@ -5,6 +5,7 @@ import com.example.microservice_students.exception.StudentsNotFoundException
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.repository.StudentsRepository
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
@@ -12,7 +13,7 @@ import java.time.LocalDate
 class StudentsService(private val studentsRepository: StudentsRepository) {
     fun createStudents(student: Student): Student {
         if (studentsRepository.existsByNameAndDateBirth(student.name, student.dateBirth)) {
-            throw StudentsExistsException("O aluno: [${student.name}], já existe na base de dados.")
+            throw StudentsExistsException("O aluno: [${student.name}], já existe na base de dados.", HttpStatus.BAD_REQUEST)
         }
 
         return studentsRepository.save(student)
@@ -24,7 +25,7 @@ class StudentsService(private val studentsRepository: StudentsRepository) {
         val findAll = studentsRepository.findAll(pageRequest)
 
         if (findAll.isEmpty) {
-            throw StudentsNotFoundException("Não há estudantes na base de dados.")
+            throw StudentsNotFoundException("Não há estudantes na base de dados.", HttpStatus.NOT_FOUND)
         }
 
         return findAll.toList()

@@ -1,4 +1,6 @@
 package com.example.microservice_students.exception
 
-class StudentsNotFoundException(message: String) : RuntimeException(message) {
+import org.springframework.http.HttpStatus
+
+class StudentsNotFoundException(message: String, val httpStatus: HttpStatus) : RuntimeException(message) {
 }
