@@ -3,6 +3,8 @@ package com.example.microservice_students.application.controller
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.service.StudentsService
+import com.example.microservice_students.fixture.StudentsFixture.getStudentsFixture
+import com.example.microservice_students.fixture.StudentsFixture.getStudentsListFixture
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -21,10 +23,6 @@ class StudentsControllerTest {
     @InjectMockKs
     lateinit var controller: StudentsController
 
-    private var studentMock: Student = Student(1L, "Leo", LocalDate.parse("2020-10-16"))
-
-    private var studentList = listOf(Student(2, "A", LocalDate.parse("2020-01-02")))
-
     @BeforeEach
     fun setUp(){
         MockKAnnotations.init(this)
@@ -32,16 +30,16 @@ class StudentsControllerTest {
 
     @Test
     fun shouldReturnStatusCode201_whenCreatedStudents() {
-        every { studentsService.createStudents(studentMock) } returns studentMock
+        every { studentsService.createStudents(getStudentsFixture()) } returns getStudentsFixture()
 
-        val resultController = controller.createStudents(studentMock)
+        val resultController = controller.createStudents(getStudentsFixture())
 
         assertEquals(HttpStatus.CREATED, resultController.statusCode)
     }
 
     @Test
     fun shouldReturnStatusCode200_whenFoundStudents(){
-        every { studentsService.getAllStudents(0,1) } returns studentList
+        every { studentsService.getAllStudents(0,1) } returns getStudentsListFixture()
 
         val resultController = controller.getAllStudents(0, 1)
 

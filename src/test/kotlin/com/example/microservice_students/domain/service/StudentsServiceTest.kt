@@ -4,6 +4,7 @@ import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.repository.StudentsRepository
 import com.example.microservice_students.exception.StudentsExistsException
 import com.example.microservice_students.exception.StudentsNotFoundException
+import com.example.microservice_students.fixture.StudentsFixture.getStudentsFixture
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -26,8 +27,6 @@ class StudentsServiceTest {
     @InjectMockKs
     lateinit var studentsService: StudentsService
 
-     private var studentMock: Student = Student(1L, "Leo", LocalDate.parse("2020-10-16"))
-
     @BeforeEach
     fun setUp(){
         MockKAnnotations.init(this)
@@ -37,18 +36,18 @@ class StudentsServiceTest {
     fun givenStudentName_whenCreated_shouldToBeEqualsNameSaved() {
         every { studentsRepository.existsByNameAndDateBirth("Leo", LocalDate.parse("2020-10-16")) } returns false
 
-        every { studentsRepository.save(studentMock) } returns studentMock
+        every { studentsRepository.save(getStudentsFixture()) } returns getStudentsFixture()
 
-        val studentCreated = studentsRepository.save(studentMock)
+        val studentCreated = studentsRepository.save(getStudentsFixture())
 
-        assertEquals(studentCreated.name, studentsService.createStudents(studentMock).name)
+        assertEquals(studentCreated.name, studentsService.createStudents(getStudentsFixture()).name)
     }
 
     @Test
     fun shouldThrowStudentsFoundException() {
         every { studentsRepository.existsByNameAndDateBirth("Leo", LocalDate.parse("2020-10-16")) } returns true
 
-        assertThrows<StudentsExistsException> { studentsService.createStudents(studentMock) }
+        assertThrows<StudentsExistsException> { studentsService.createStudents(getStudentsFixture()) }
     }
 
     @Test
