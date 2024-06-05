@@ -1,8 +1,10 @@
 package com.example.microservice_students.application.controller
 
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
-import com.example.microservice_students.domain.model.Student
+import com.example.microservice_students.domain.service.GradesService
 import com.example.microservice_students.domain.service.StudentsService
+import com.example.microservice_students.fixture.GradesFixture.getGradesRequest
+import com.example.microservice_students.fixture.GradesFixture.getGradesResponse
 import com.example.microservice_students.fixture.StudentsFixture.getStudentsFixture
 import com.example.microservice_students.fixture.StudentsFixture.getStudentsListFixture
 import io.mockk.MockKAnnotations
@@ -20,6 +22,9 @@ class StudentsControllerTest {
     @MockK
     lateinit var studentsService: StudentsService
 
+    @MockK
+    lateinit var gradesService: GradesService
+
     @InjectMockKs
     lateinit var controller: StudentsController
 
@@ -33,6 +38,15 @@ class StudentsControllerTest {
         every { studentsService.createStudents(getStudentsFixture()) } returns getStudentsFixture()
 
         val resultController = controller.createStudents(getStudentsFixture())
+
+        assertEquals(HttpStatus.CREATED, resultController.statusCode)
+    }
+
+    @Test
+    fun shouldReturnStatusCode201_whenCreatedGrades() {
+        every { gradesService.executeService(getGradesRequest()) } returns getGradesResponse()
+
+        val resultController = controller.createGrades(getGradesRequest())
 
         assertEquals(HttpStatus.CREATED, resultController.statusCode)
     }

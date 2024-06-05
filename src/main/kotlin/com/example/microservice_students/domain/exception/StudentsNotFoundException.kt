@@ -1,4 +1,4 @@
-package com.example.microservice_students.exception
+package com.example.microservice_students.domain.exception
 
 import org.springframework.http.HttpStatus
 

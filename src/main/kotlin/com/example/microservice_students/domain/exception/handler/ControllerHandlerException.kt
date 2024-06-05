@@ -1,8 +1,8 @@
-package com.example.microservice_students.exception.handler
+package com.example.microservice_students.domain.exception.handler
 
-import com.example.microservice_students.exception.StudentsExistsException
-import com.example.microservice_students.exception.StudentsNotFoundException
-import com.example.microservice_students.exception.response.ErrorResponse
+import com.example.microservice_students.domain.exception.StudentsExistsException
+import com.example.microservice_students.domain.exception.StudentsNotFoundException
+import com.example.microservice_students.domain.exception.response.ErrorResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler

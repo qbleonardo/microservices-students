@@ -1,7 +1,7 @@
 package com.example.microservice_students.domain.service
 
-import com.example.microservice_students.exception.StudentsExistsException
-import com.example.microservice_students.exception.StudentsNotFoundException
+import com.example.microservice_students.domain.exception.StudentsExistsException
+import com.example.microservice_students.domain.exception.StudentsNotFoundException
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.repository.StudentsRepository
 import org.springframework.data.domain.PageRequest

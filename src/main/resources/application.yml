@@ -14,3 +14,11 @@ spring:
 springdoc:
     swagger-ui:
         path: /swagger-ui.html
+
+resilience4j.circuitbreaker:
+    instances:
+        studentsService:
+            waitDurationInOpenState: 10000
+            minimumNumberOfCalls: 3
+            slidingWindowSize: 6
+

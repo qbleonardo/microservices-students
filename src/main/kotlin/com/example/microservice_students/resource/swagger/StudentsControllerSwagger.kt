@@ -3,7 +3,7 @@ package com.example.microservice_students.resource.swagger
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
 import com.example.microservice_students.application.controller.response.StudentsResponse
 import com.example.microservice_students.domain.model.Student
-import com.example.microservice_students.exception.response.ErrorResponse
+import com.example.microservice_students.domain.exception.response.ErrorResponse
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

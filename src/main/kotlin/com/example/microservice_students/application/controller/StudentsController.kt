@@ -1,8 +1,10 @@
 package com.example.microservice_students.application.controller
 
+import com.example.microservice_students.application.controller.request.GradesRequest
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
 import com.example.microservice_students.application.controller.response.StudentsResponse
 import com.example.microservice_students.domain.model.Student
+import com.example.microservice_students.domain.service.GradesService
 import com.example.microservice_students.domain.service.StudentsService
 import com.example.microservice_students.resource.swagger.StudentsControllerSwagger
 import org.springframework.http.HttpStatus
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(value = ["/students"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class StudentsController(private var studentsService: StudentsService) : StudentsControllerSwagger {
+class StudentsController(private var studentsService: StudentsService,
+                         private var gradesService: GradesService) : StudentsControllerSwagger {
 
     @PostMapping
     override fun createStudents(@RequestBody student: Student): ResponseEntity<StudentsResponse> {
@@ -22,6 +25,16 @@ class StudentsController(private var studentsService: StudentsService) : Student
                 .status(HttpStatus.CREATED)
                     .body(StudentsResponse("Estudante criado",
                             Student(createdStudent.id, createdStudent.name,createdStudent.dateBirth), HttpStatus.CREATED.value()))
+    }
+
+    @PostMapping("/grades-students")
+    fun createGrades(@RequestBody gradesRequest: GradesRequest): ResponseEntity<StudentsResponse>{
+        val gradesResponse = gradesService.executeService(gradesRequest)
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                    .body(StudentsResponse("Nota criada",
+                            gradesResponse, HttpStatus.CREATED.value()))
     }
 
     @GetMapping
