@@ -4,6 +4,7 @@ import com.example.microservice_students.application.controller.request.UpdateDa
 import com.example.microservice_students.application.controller.response.StudentsResponse
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.service.StudentsService
+import com.example.microservice_students.resource.swagger.StudentsControllerSwagger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,10 +12,10 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(value = ["/students"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class StudentsController(private var studentsService: StudentsService) {
+class StudentsController(private var studentsService: StudentsService) : StudentsControllerSwagger {
 
     @PostMapping
-    fun createStudents(@RequestBody student: Student): ResponseEntity<StudentsResponse> {
+    override fun createStudents(@RequestBody student: Student): ResponseEntity<StudentsResponse> {
         val createdStudent = studentsService.createStudents(student)
 
         return ResponseEntity
@@ -24,8 +25,8 @@ class StudentsController(private var studentsService: StudentsService) {
     }
 
     @GetMapping
-    fun getAllStudents(@RequestParam(required = false) page: Int,
-                       @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
+    override fun getAllStudents(@RequestParam(required = false) page: Int,
+                                @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
         val pageSizeValue: Int = if(pageSize < 1) 1 else pageSize
 
         val allStudents = studentsService.getAllStudents(page, pageSizeValue)
@@ -37,8 +38,8 @@ class StudentsController(private var studentsService: StudentsService) {
     }
 
     @PutMapping("/{id}")
-    fun updateStudent(@PathVariable(value = "id") id: Long,
-                      @RequestBody birthRequest: UpdateDateBirthRequest) : ResponseEntity<StudentsResponse>{
+    override fun updateStudent(@PathVariable(value = "id") id: Long,
+                               @RequestBody birthRequest: UpdateDateBirthRequest) : ResponseEntity<StudentsResponse>{
         studentsService.updateStudentsDateBirth(birthRequest.dateBirth, id)
 
         return ResponseEntity
@@ -48,7 +49,7 @@ class StudentsController(private var studentsService: StudentsService) {
     }
 
     @DeleteMapping("/{id}")
-    fun removeStudents(@PathVariable(value = "id") id: Long): ResponseEntity<StudentsResponse>{
+    override fun removeStudents(@PathVariable(value = "id") id: Long): ResponseEntity<Any>{
         studentsService.removeStudentsById(id)
 
         return ResponseEntity.noContent().build()
