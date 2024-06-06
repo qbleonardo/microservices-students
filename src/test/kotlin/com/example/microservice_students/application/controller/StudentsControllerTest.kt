@@ -3,6 +3,7 @@ package com.example.microservice_students.application.controller
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
 import com.example.microservice_students.domain.service.GradesService
 import com.example.microservice_students.domain.service.StudentsService
+import com.example.microservice_students.fixture.GradesFixture.getGradesListResponse
 import com.example.microservice_students.fixture.GradesFixture.getGradesResponse
 import com.example.microservice_students.fixture.StudentsFixture.getStudentsFixture
 import com.example.microservice_students.fixture.StudentsFixture.getStudentsListFixture
@@ -51,7 +52,16 @@ class StudentsControllerTest {
     }
 
     @Test
-    fun shouldReturnStatusCode200_whenFoundStudents(){
+    fun shouldReturnStatusCode200_whenGetAllStudents(){
+        every { gradesService.executeGetAllGrades(0,1) } returns getGradesListResponse()
+
+        val resultController = controller.getAllGrades(0, 1)
+
+        assertEquals(HttpStatus.OK, resultController.statusCode)
+    }
+
+    @Test
+    fun shouldReturnStatusCode200_whenFoundAllStudents(){
         every { studentsService.getAllStudents(0,1) } returns getStudentsListFixture()
 
         val resultController = controller.getAllStudents(0, 1)

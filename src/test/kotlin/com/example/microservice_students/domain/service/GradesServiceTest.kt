@@ -1,5 +1,6 @@
 package com.example.microservice_students.domain.service
 
+import com.example.microservice_students.fixture.GradesFixture.getGradesListResponse
 import com.example.microservice_students.fixture.GradesFixture.getGradesResponse
 import com.example.microservice_students.resource.feign.GradesStudentsFeign
 import io.mockk.MockKAnnotations
@@ -30,5 +31,12 @@ class GradesServiceTest {
         val createdGrade = gradesStudentsFeign.createGradesToStudents(getGradesResponse())
 
         Assertions.assertEquals(createdGrade.id, response.id)
+    }
+
+    @Test
+    fun whenRequestAllGrades_shouldReturnNotNull(){
+        every { gradesStudentsFeign.getAllGrades(0, 1) } returns getGradesListResponse()
+
+        Assertions.assertNotNull(gradesService.executeGetAllGrades(0, 1))
     }
 }
