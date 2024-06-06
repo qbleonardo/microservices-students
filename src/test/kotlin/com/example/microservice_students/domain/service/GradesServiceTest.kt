@@ -1,6 +1,5 @@
 package com.example.microservice_students.domain.service
 
-import com.example.microservice_students.fixture.GradesFixture.getGradesRequest
 import com.example.microservice_students.fixture.GradesFixture.getGradesResponse
 import com.example.microservice_students.resource.feign.GradesStudentsFeign
 import io.mockk.MockKAnnotations
@@ -24,11 +23,11 @@ class GradesServiceTest {
 
     @Test
     fun shouldSaveGrade_whenRequestToGradeService_returnEqualsObject() {
-        every { gradesStudentsFeign.createGradesToStudents(getGradesRequest()) } returns getGradesResponse()
+        every { gradesStudentsFeign.createGradesToStudents(getGradesResponse()) } returns getGradesResponse()
 
-        val response = gradesService.executeService(getGradesRequest())
+        val response = gradesService.executeCreateGrade(getGradesResponse())
 
-        val createdGrade = gradesStudentsFeign.createGradesToStudents(getGradesRequest())
+        val createdGrade = gradesStudentsFeign.createGradesToStudents(getGradesResponse())
 
         Assertions.assertEquals(createdGrade.id, response.id)
     }

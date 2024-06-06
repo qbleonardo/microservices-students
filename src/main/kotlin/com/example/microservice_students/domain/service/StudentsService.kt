@@ -13,7 +13,7 @@ import java.time.LocalDate
 class StudentsService(private val studentsRepository: StudentsRepository) {
     fun createStudents(student: Student): Student {
         if (studentsRepository.existsByNameAndDateBirth(student.name, student.dateBirth)) {
-            throw StudentsExistsException("O aluno: [${student.name}], já existe na base de dados.", HttpStatus.BAD_REQUEST)
+            throw StudentsExistsException("O aluno: [${student.name}] está cadastrado na base de dados.", HttpStatus.BAD_REQUEST)
         }
 
         return studentsRepository.save(student)
