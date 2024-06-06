@@ -1,11 +1,12 @@
 package com.example.microservice_students.application.controller
 
-import com.example.microservice_students.application.controller.request.GradesRequest
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
 import com.example.microservice_students.application.controller.response.StudentsResponse
+import com.example.microservice_students.domain.model.Grades
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.service.GradesService
 import com.example.microservice_students.domain.service.StudentsService
+import com.example.microservice_students.domain.util.ValidatePageSizeUtils.validatePageSize
 import com.example.microservice_students.resource.swagger.StudentsControllerSwagger
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -28,26 +29,36 @@ class StudentsController(private var studentsService: StudentsService,
     }
 
     @PostMapping("/grades-students")
-    fun createGrades(@RequestBody gradesRequest: GradesRequest): ResponseEntity<StudentsResponse>{
-        val gradesResponse = gradesService.executeService(gradesRequest)
+    fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>{
+        val gradesResponse = gradesService.executeCreateGrade(gradesRequest)
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                    .body(StudentsResponse("Nota criada",
-                            gradesResponse, HttpStatus.CREATED.value()))
+                    .body(StudentsResponse("Nota criada", gradesResponse, HttpStatus.CREATED.value()))
+    }
+
+    @GetMapping("/grades-students")
+     fun getAllGrades(@RequestParam(required = false) page: Int,
+                      @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
+        val pageSizeValue: Int = pageSize.validatePageSize()
+
+        val allGrades = gradesService.executeGetAllGrades(page, pageSizeValue)
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                    .body(StudentsResponse("Notas encontradas", allGrades, HttpStatus.OK.value()))
     }
 
     @GetMapping
     override fun getAllStudents(@RequestParam(required = false) page: Int,
                                 @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
-        val pageSizeValue: Int = if(pageSize < 1) 1 else pageSize
+        val pageSizeValue: Int = pageSize.validatePageSize()
 
         val allStudents = studentsService.getAllStudents(page, pageSizeValue)
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(StudentsResponse("Estudantes encontrados",
-                        allStudents, HttpStatus.OK.value()))
+                .body(StudentsResponse("Estudantes encontrados", allStudents, HttpStatus.OK.value()))
     }
 
     @PutMapping("/{id}")
@@ -67,5 +78,7 @@ class StudentsController(private var studentsService: StudentsService,
 
         return ResponseEntity.noContent().build()
     }
+
+
 
 }

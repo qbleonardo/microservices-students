@@ -1,6 +1,6 @@
-package com.example.microservice_students.application.controller.response
+package com.example.microservice_students.domain.model
 
-data class GradesResponse(
+data class Grades(
         var id: Long,
         var studentName: String,
         var subject: String,
