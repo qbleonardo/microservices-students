@@ -29,7 +29,7 @@ class StudentsController(private var studentsService: StudentsService,
     }
 
     @PostMapping("/grades-students")
-    fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>{
+    override fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>{
         val gradesResponse = gradesService.executeCreateGrade(gradesRequest)
 
         return ResponseEntity
@@ -38,8 +38,8 @@ class StudentsController(private var studentsService: StudentsService,
     }
 
     @GetMapping("/grades-students")
-     fun getAllGrades(@RequestParam(required = false) page: Int,
-                      @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
+    override fun getAllGrades(@RequestParam(required = false) page: Int,
+                              @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
         val pageSizeValue: Int = pageSize.validatePageSize()
 
         val allGrades = gradesService.executeGetAllGrades(page, pageSizeValue)
