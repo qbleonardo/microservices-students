@@ -22,3 +22,6 @@ resilience4j.circuitbreaker:
             minimumNumberOfCalls: 3
             slidingWindowSize: 6
 
+feign:
+    grades-service:
+        url: localhost:8081/grades-students

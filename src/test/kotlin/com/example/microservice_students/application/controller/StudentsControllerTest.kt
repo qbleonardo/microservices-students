@@ -61,6 +61,15 @@ class StudentsControllerTest {
     }
 
     @Test
+    fun shouldReturnStatusCode200_whenGetStudentById(){
+        every { studentsService.getStudentsById(1L) } returns getStudentsFixture()
+
+        val resultController = controller.getStudentById(1L)
+
+        assertEquals(HttpStatus.OK, resultController.statusCode)
+    }
+
+    @Test
     fun shouldReturnStatusCode200_whenFoundAllStudents(){
         every { studentsService.getAllStudents(0,1) } returns getStudentsListFixture()
 
