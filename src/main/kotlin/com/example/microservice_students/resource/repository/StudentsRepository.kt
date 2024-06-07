@@ -1,4 +1,4 @@
-package com.example.microservice_students.domain.repository
+package com.example.microservice_students.resource.repository
 
 import com.example.microservice_students.domain.model.Student
 import org.springframework.data.jpa.repository.JpaRepository

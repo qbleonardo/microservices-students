@@ -1,10 +1,10 @@
 package com.example.microservice_students.domain.service
 
-import com.example.microservice_students.domain.model.Student
-import com.example.microservice_students.domain.repository.StudentsRepository
-import com.example.microservice_students.domain.exception.StudentsExistsException
+import com.example.microservice_students.domain.exception.StudentsAlreadyCreatedException
 import com.example.microservice_students.domain.exception.StudentsNotFoundException
 import com.example.microservice_students.fixture.StudentsFixture.getStudentsFixture
+import com.example.microservice_students.fixture.StudentsFixture.getStudentsListFixture
+import com.example.microservice_students.resource.repository.StudentsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import java.time.LocalDate
+import java.util.*
 
 class StudentsServiceTest {
 
@@ -33,28 +34,35 @@ class StudentsServiceTest {
     }
 
     @Test
-    fun givenStudentName_whenCreated_shouldToBeEqualsNameSaved() {
-        every { studentsRepository.existsByNameAndDateBirth("Leo", LocalDate.parse("2020-10-16")) } returns false
+    fun shouldToBeEqualsNameSaved() {
+        val student = getStudentsFixture()
+        every { studentsRepository.existsByNameAndDateBirth(student.name, student.dateBirth) } returns false
+        every { studentsRepository.save(student) } returns student
 
-        every { studentsRepository.save(getStudentsFixture()) } returns getStudentsFixture()
+        val createStudent = studentsService.createStudents(student)
 
-        val studentCreated = studentsRepository.save(getStudentsFixture())
-
-        assertEquals(studentCreated.name, studentsService.createStudents(getStudentsFixture()).name)
+        assertEquals(student.name, createStudent.name)
     }
 
     @Test
-    fun shouldThrowStudentsFoundException() {
-        every { studentsRepository.existsByNameAndDateBirth("Leo", LocalDate.parse("2020-10-16")) } returns true
+    fun shouldThrowStudentsExistsException() {
+        every { studentsRepository.existsByNameAndDateBirth(getStudentsFixture().name, getStudentsFixture().dateBirth) } returns true
 
-        assertThrows<StudentsExistsException> { studentsService.createStudents(getStudentsFixture()) }
+        assertThrows<StudentsAlreadyCreatedException> { studentsService.createStudents(getStudentsFixture()) }
     }
 
     @Test
-    fun shouldReturnSameSizeChoiceAndStatusOK() {
-        val studentList = listOf(Student(2, "A", LocalDate.parse("2020-01-02")))
+    fun shouldReturnStudentsById(){
+        every { studentsRepository.findById(1) } returns Optional.of(getStudentsFixture())
 
-        val pageImpl = PageImpl(studentList)
+        val studentsById = studentsService.getStudentsById(1)
+
+        assertEquals(studentsRepository.findById(1).get().id, studentsById.id)
+    }
+
+    @Test
+    fun shouldReturnSamePageSizeChoicedAndStatusOK() {
+        val pageImpl = PageImpl(getStudentsListFixture())
 
         every { studentsRepository.findAll(PageRequest.of(0,1)) } returns pageImpl
 
@@ -64,7 +72,7 @@ class StudentsServiceTest {
     }
 
     @Test
-    fun shouldThrowStudentsNotFoundException(){
+    fun shouldThrowStudentsNotFoundException_whenNotFoundAllStudents(){
         every { studentsRepository.findAll(PageRequest.of(0,1)) } returns Page.empty()
 
         assertThrows<StudentsNotFoundException> { studentsService.getAllStudents(0, 1) }
@@ -72,22 +80,36 @@ class StudentsServiceTest {
 
     @Test
     fun shouldUpdateStudentsByDateBirth() {
-        every { studentsRepository.updateByDateBirth(LocalDate.parse("2024-01-01"), 1L) } returns Unit
+        val date = LocalDate.parse("2024-01-01")
+        val studentId = 1L
 
-        studentsService.updateStudentsDateBirth(LocalDate.parse("2024-01-01"), 1L)
+        every { studentsRepository.updateByDateBirth(date, studentId) } returns Unit
+        every { studentsRepository.findById(studentId) } returns Optional.of(getStudentsFixture())
 
-        verify(atLeast = 1)  { studentsRepository.updateByDateBirth(LocalDate.parse("2024-01-01"), 1L) }
-        verify(atLeast = 1)  { studentsService.updateStudentsDateBirth(LocalDate.parse("2024-01-01"), 1L) }
+        studentsService.updateStudentsDateBirth(date, studentId)
+
+        verify(exactly = 1) { studentsRepository.findById(studentId) }
+        verify(exactly = 1)  { studentsRepository.updateByDateBirth(date, studentId) }
     }
 
     @Test
     fun shouldRemoveStudentsById() {
-        every { studentsRepository.deleteById(1L) } returns Unit
+        val studentId = 1L
 
-        studentsService.removeStudentsById(1L)
+        every { studentsRepository.findById(studentId) } returns Optional.of(getStudentsFixture())
+        every { studentsRepository.deleteById(studentId) } returns Unit
 
-        verify(atLeast = 1) { studentsRepository.deleteById(1L) }
-        verify(atLeast = 1) { studentsService.removeStudentsById(1L) }
+        studentsService.removeStudentsById(studentId)
+
+        verify(exactly = 1) { studentsRepository.findById(studentId) }
+        verify(exactly = 1) { studentsRepository.deleteById(studentId) }
+    }
+
+    @Test
+    fun shouldThrowStudentNotFoundException_whenNotFoundById() {
+        every { studentsRepository.findById(1L) } returns Optional.empty()
+
+        assertThrows<StudentsNotFoundException>{ studentsService.removeStudentsById(1L) }
     }
 
 

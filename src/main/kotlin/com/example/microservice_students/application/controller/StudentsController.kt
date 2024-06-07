@@ -28,27 +28,6 @@ class StudentsController(private var studentsService: StudentsService,
                             Student(createdStudent.id, createdStudent.name,createdStudent.dateBirth), HttpStatus.CREATED.value()))
     }
 
-    @PostMapping("/grades-students")
-    override fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>{
-        val gradesResponse = gradesService.executeCreateGrade(gradesRequest)
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                    .body(StudentsResponse("Nota criada", gradesResponse, HttpStatus.CREATED.value()))
-    }
-
-    @GetMapping("/grades-students")
-    override fun getAllGrades(@RequestParam(required = false) page: Int,
-                              @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
-        val pageSizeValue: Int = pageSize.validatePageSize()
-
-        val allGrades = gradesService.executeGetAllGrades(page, pageSizeValue)
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                    .body(StudentsResponse("Notas encontradas", allGrades, HttpStatus.OK.value()))
-    }
-
     @GetMapping
     override fun getAllStudents(@RequestParam(required = false) page: Int,
                                 @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
@@ -77,6 +56,27 @@ class StudentsController(private var studentsService: StudentsService,
         studentsService.removeStudentsById(id)
 
         return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/grades-students")
+    override fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>{
+        val gradesResponse = gradesService.executeCreateGrade(gradesRequest)
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(StudentsResponse("Nota criada", gradesResponse, HttpStatus.CREATED.value()))
+    }
+
+    @GetMapping("/grades-students")
+    override fun getAllGrades(@RequestParam(required = false) page: Int,
+                              @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse> {
+        val pageSizeValue: Int = pageSize.validatePageSize()
+
+        val allGrades = gradesService.executeGetAllGrades(page, pageSizeValue)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(StudentsResponse("Notas encontradas", allGrades, HttpStatus.OK.value()))
     }
 
 
