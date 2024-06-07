@@ -22,7 +22,7 @@ class StudentsService(private val studentsRepository: StudentsRepository) {
     }
 
     fun getStudentsById(id: Long): Student {
-        return getStudentOrException(id)
+        return getStudentByIdOrThrowException(id)
     }
 
     fun getAllStudents(page: Int, pageSize: Int): List<Student> {
@@ -38,22 +38,22 @@ class StudentsService(private val studentsRepository: StudentsRepository) {
     }
 
     fun updateStudentsDateBirth(dateBirth: LocalDate, id: Long) {
-        val student = getStudentOrException(id)
+        val student = getStudentByIdOrThrowException(id)
 
         studentsRepository.updateByDateBirth(dateBirth, student.id)
     }
 
     fun removeStudentsById(id: Long) {
-        val student = getStudentOrException(id)
+        val student = getStudentByIdOrThrowException(id)
 
         studentsRepository.deleteById(student.id)
     }
 
-    private fun getStudentOrException(id: Long): Student {
+    private fun getStudentByIdOrThrowException(id: Long): Student {
         return studentsRepository.findById(id)
             .orElseThrow {
                 throw StudentsNotFoundException(
-                    "Não há estudantes com o id: [$id] na base de dados.",
+                    "Não há o estudante com id: [$id] na base de dados.",
                     HttpStatus.NOT_FOUND
                 )
             }

@@ -25,7 +25,16 @@ class StudentsController(private var studentsService: StudentsService,
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                     .body(StudentsResponse("Estudante criado",
-                            Student(createdStudent.id, createdStudent.name,createdStudent.dateBirth), HttpStatus.CREATED.value()))
+                            Student(createdStudent.id, createdStudent.name,createdStudent.dateBirth)))
+    }
+
+    @GetMapping("/{id}")
+    fun getStudentById(@PathVariable(value = "id", required = true) id: Long): ResponseEntity<StudentsResponse> {
+        val studentById = studentsService.getStudentsById(id)
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                    .body(StudentsResponse("Estudante encontrado", studentById))
     }
 
     @GetMapping
@@ -37,7 +46,7 @@ class StudentsController(private var studentsService: StudentsService,
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(StudentsResponse("Estudantes encontrados", allStudents, HttpStatus.OK.value()))
+                .body(StudentsResponse("Estudantes encontrados", allStudents))
     }
 
     @PutMapping("/{id}")
@@ -48,7 +57,7 @@ class StudentsController(private var studentsService: StudentsService,
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(StudentsResponse("Data de nascimento do estudante atualizada",
-                        String.format("Id: $id - Nova data de nascimento: ${birthRequest.dateBirth}"), HttpStatus.OK.value()))
+                        String.format("Id: $id - Nova data de nascimento: ${birthRequest.dateBirth}")))
     }
 
     @DeleteMapping("/{id}")
@@ -64,7 +73,7 @@ class StudentsController(private var studentsService: StudentsService,
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(StudentsResponse("Nota criada", gradesResponse, HttpStatus.CREATED.value()))
+            .body(StudentsResponse("Nota criada", gradesResponse))
     }
 
     @GetMapping("/grades-students")
@@ -76,7 +85,7 @@ class StudentsController(private var studentsService: StudentsService,
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(StudentsResponse("Notas encontradas", allGrades, HttpStatus.OK.value()))
+            .body(StudentsResponse("Notas encontradas", allGrades))
     }
 
 
