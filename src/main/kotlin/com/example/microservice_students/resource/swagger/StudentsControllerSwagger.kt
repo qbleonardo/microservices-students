@@ -32,28 +32,17 @@ interface StudentsControllerSwagger {
     @PostMapping
     fun createStudents(@RequestBody student: Student): ResponseEntity<StudentsResponse>
 
-    @Operation(summary = "Criação de nota para estudantes",
-                description = "Endpoint responsável por criar nota dos estudantes",
-                tags = ["Criação de nota"])
-    @ApiResponse(responseCode = "200", description = "Retorno com sucesso",
-                content = [Content(mediaType = "application/json", schema = Schema(implementation = StudentsResponse::class))])
-    @ApiResponse(responseCode = "400",
-        description = "Notas já cadastradas",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))])
-    @PostMapping("/grades-students")
-    fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>
-
-    @Operation(summary = "Buscar todas notas",
-        description = "Endpoint responsável por retornar todas as notas dos estudantes",
-        tags = ["Buscar todas notas"])
+    @Operation(summary = "Busca estudante por id",
+        description = "Endpoint responsável por buscar estudante por id",
+        tags = ["Buscar por id"])
     @ApiResponse(responseCode = "200", description = "Retorno com sucesso",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = StudentsResponse::class))])
     @ApiResponse(responseCode = "404",
-        description = "Notas não cadastradas",
+        description = "Estudante não encontrado",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))])
-    @GetMapping
-    fun getAllGrades(@RequestParam(required = false) page: Int,
-                     @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse>
+    @GetMapping("/{id}")
+    fun getStudentById(@Parameter(name = "id", required = true, ) id: Long): ResponseEntity<StudentsResponse>
+
     @Operation(summary = "Buscar todos estudantes",
                 description = "Endpoint responsável por retornar todos os estudantes cadastrados",
                 tags = ["Buscar todos estudantes"])
@@ -82,5 +71,28 @@ interface StudentsControllerSwagger {
                 content = [Content(mediaType = "application/json")])
     @DeleteMapping("/{id}")
     fun removeStudents(@Parameter(required = false, example = "1") id: Long): ResponseEntity<Any>
+
+    @Operation(summary = "Criação de nota para estudantes",
+        description = "Endpoint responsável por criar nota dos estudantes",
+        tags = ["Criação de nota"])
+    @ApiResponse(responseCode = "200", description = "Retorno com sucesso",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = StudentsResponse::class))])
+    @ApiResponse(responseCode = "400",
+        description = "Notas já cadastradas",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))])
+    @PostMapping("/grades-students")
+    fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>
+
+    @Operation(summary = "Buscar todas notas",
+        description = "Endpoint responsável por retornar todas as notas dos estudantes",
+        tags = ["Buscar todas notas"])
+    @ApiResponse(responseCode = "200", description = "Retorno com sucesso",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = StudentsResponse::class))])
+    @ApiResponse(responseCode = "404",
+        description = "Notas não cadastradas",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))])
+    @GetMapping
+    fun getAllGrades(@RequestParam(required = false) page: Int,
+                     @RequestParam(required = false) pageSize: Int): ResponseEntity<StudentsResponse>
 
 }
