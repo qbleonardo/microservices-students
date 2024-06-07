@@ -18,10 +18,14 @@ springdoc:
 resilience4j.circuitbreaker:
     instances:
         studentsService:
-            waitDurationInOpenState: 10000
+            waitDurationInOpenState: 1000ms
             minimumNumberOfCalls: 3
             slidingWindowSize: 6
-
+resilience4j.retry:
+    instances:
+        studentsRetry:
+            maxAttempts: 3
+            waitDuration: 400ms
 feign:
     grades-service:
         url: localhost:8081/grades-students

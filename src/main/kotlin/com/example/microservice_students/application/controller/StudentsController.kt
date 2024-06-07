@@ -19,7 +19,7 @@ class StudentsController(private var studentsService: StudentsService,
                          private var gradesService: GradesService) : StudentsControllerSwagger {
 
     @PostMapping
-    override fun createStudents(@RequestBody student: Student): ResponseEntity<StudentsResponse> {
+    override fun createStudents(@RequestBody  student: Student): ResponseEntity<StudentsResponse> {
         val createdStudent = studentsService.createStudents(student)
 
         return ResponseEntity
@@ -29,7 +29,7 @@ class StudentsController(private var studentsService: StudentsService,
     }
 
     @GetMapping("/{id}")
-    fun getStudentById(@PathVariable(value = "id", required = true) id: Long): ResponseEntity<StudentsResponse> {
+    override fun getStudentById(@PathVariable(value = "id", required = true) id: Long): ResponseEntity<StudentsResponse> {
         val studentById = studentsService.getStudentsById(id)
 
         return ResponseEntity
@@ -87,7 +87,5 @@ class StudentsController(private var studentsService: StudentsService,
             .status(HttpStatus.OK)
             .body(StudentsResponse("Notas encontradas", allGrades))
     }
-
-
 
 }
