@@ -1,9 +1,9 @@
 package com.example.microservice_students.domain.service
 
-import com.example.microservice_students.domain.exception.StudentsExistsException
+import com.example.microservice_students.domain.exception.StudentsAlreadyCreatedException
 import com.example.microservice_students.domain.exception.StudentsNotFoundException
 import com.example.microservice_students.domain.model.Student
-import com.example.microservice_students.domain.repository.StudentsRepository
+import com.example.microservice_students.resource.repository.StudentsRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -13,13 +13,19 @@ import java.time.LocalDate
 class StudentsService(private val studentsRepository: StudentsRepository) {
     fun createStudents(student: Student): Student {
         if (studentsRepository.existsByNameAndDateBirth(student.name, student.dateBirth)) {
-            throw StudentsExistsException("O aluno: [${student.name}] está cadastrado na base de dados.", HttpStatus.BAD_REQUEST)
+            throw StudentsAlreadyCreatedException(
+                "O aluno: [${student.name}] está cadastrado na base de dados.",
+                HttpStatus.BAD_REQUEST
+            )
         }
-
         return studentsRepository.save(student)
     }
 
-    fun getAllStudents(page: Int, pageSize: Int) : List<Student> {
+    fun getStudentsById(id: Long): Student {
+        return getStudentOrException(id)
+    }
+
+    fun getAllStudents(page: Int, pageSize: Int): List<Student> {
         val pageRequest = PageRequest.of(page, pageSize)
 
         val findAll = studentsRepository.findAll(pageRequest)
@@ -32,10 +38,24 @@ class StudentsService(private val studentsRepository: StudentsRepository) {
     }
 
     fun updateStudentsDateBirth(dateBirth: LocalDate, id: Long) {
-        studentsRepository.updateByDateBirth(dateBirth, id)
+        val student = getStudentOrException(id)
+
+        studentsRepository.updateByDateBirth(dateBirth, student.id)
     }
 
-    fun removeStudentsById(id: Long){
-        studentsRepository.deleteById(id)
+    fun removeStudentsById(id: Long) {
+        val student = getStudentOrException(id)
+
+        studentsRepository.deleteById(student.id)
+    }
+
+    private fun getStudentOrException(id: Long): Student {
+        return studentsRepository.findById(id)
+            .orElseThrow {
+                throw StudentsNotFoundException(
+                    "Não há estudantes com o id: [$id] na base de dados.",
+                    HttpStatus.NOT_FOUND
+                )
+            }
     }
 }

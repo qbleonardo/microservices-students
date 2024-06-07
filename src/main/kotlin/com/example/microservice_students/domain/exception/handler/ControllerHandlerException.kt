@@ -1,6 +1,6 @@
 package com.example.microservice_students.domain.exception.handler
 
-import com.example.microservice_students.domain.exception.StudentsExistsException
+import com.example.microservice_students.domain.exception.StudentsAlreadyCreatedException
 import com.example.microservice_students.domain.exception.StudentsNotFoundException
 import com.example.microservice_students.domain.exception.response.ErrorResponse
 import feign.FeignException
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class ControllerHandlerException {
 
     @ExceptionHandler
-    fun handleStudentsExistsException(ex: StudentsExistsException): ResponseEntity<ErrorResponse>{
+    fun handleStudentsExistsException(ex: StudentsAlreadyCreatedException): ResponseEntity<ErrorResponse>{
         return ResponseEntity(ErrorResponse(ex.message,
                 ex.httpStatus.name.plus( " - ").plus(ex.httpStatus.value())), ex.httpStatus)
     }
