@@ -8,6 +8,7 @@ import com.example.microservice_students.domain.service.GradesService
 import com.example.microservice_students.domain.service.StudentsService
 import com.example.microservice_students.domain.util.ValidatePageSizeUtils.validatePageSize
 import com.example.microservice_students.resource.swagger.StudentsControllerSwagger
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -19,7 +20,7 @@ class StudentsController(private var studentsService: StudentsService,
                          private var gradesService: GradesService) : StudentsControllerSwagger {
 
     @PostMapping
-    override fun createStudents(@RequestBody  student: Student): ResponseEntity<StudentsResponse> {
+    override fun createStudents(@Valid @RequestBody student: Student): ResponseEntity<StudentsResponse> {
         val createdStudent = studentsService.createStudents(student)
 
         return ResponseEntity

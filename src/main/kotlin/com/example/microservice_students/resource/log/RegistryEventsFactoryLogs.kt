@@ -6,13 +6,14 @@ import io.github.resilience4j.core.registry.EntryAddedEvent
 import io.github.resilience4j.core.registry.EntryRemovedEvent
 import io.github.resilience4j.core.registry.EntryReplacedEvent
 import io.github.resilience4j.core.registry.RegistryEventConsumer
+import io.github.resilience4j.retry.Retry
 import lombok.extern.slf4j.Slf4j
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Slf4j
 @Configuration
-class CircuitBreakerLog {
+class RegistryEventsFactoryLogs {
 
     @Bean
     fun circuitBreakerLogsRegistry(): RegistryEventConsumer<CircuitBreaker>{
@@ -29,6 +30,28 @@ class CircuitBreakerLog {
             }
 
             override fun onEntryReplacedEvent(entryReplacedEvent: EntryReplacedEvent<CircuitBreaker>) {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
+
+    @Bean
+    fun retryLogsRegistry(): RegistryEventConsumer<Retry>{
+        return object: RegistryEventConsumer<Retry>{
+            override fun onEntryAddedEvent(entryAddedEvent: EntryAddedEvent<Retry>) {
+                entryAddedEvent.addedEntry.eventPublisher.onEvent { event ->
+                    log.info("Retry: Tentativa de chamada número: [{}]",
+                        event.numberOfRetryAttempts)
+                }
+            }
+
+            override fun onEntryRemovedEvent(entryRemoveEvent: EntryRemovedEvent<Retry>) {
+                TODO("Not yet implemented")
+
+            }
+
+            override fun onEntryReplacedEvent(entryReplacedEvent: EntryReplacedEvent<Retry>) {
                 TODO("Not yet implemented")
             }
 
