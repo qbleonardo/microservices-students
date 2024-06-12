@@ -41,8 +41,9 @@ class RegistryEventsFactoryLogs {
         return object: RegistryEventConsumer<Retry>{
             override fun onEntryAddedEvent(entryAddedEvent: EntryAddedEvent<Retry>) {
                 entryAddedEvent.addedEntry.eventPublisher.onEvent { event ->
-                    log.info("Retry: Tentativa de chamada número: [{}]",
-                        event.numberOfRetryAttempts)
+                    if(event.numberOfRetryAttempts > 0)
+                        log.info("Retry: Tentativa de chamada - número: [{}]", event.numberOfRetryAttempts)
+                    else return@onEvent
                 }
             }
 
