@@ -4,7 +4,7 @@ import com.example.microservice_students.application.controller.request.UpdateDa
 import com.example.microservice_students.application.controller.response.StudentsResponse
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.exception.response.ErrorResponse
-import com.example.microservice_students.domain.model.Grades
+import com.example.microservice_students.domain.model.Grade
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -81,7 +81,7 @@ interface StudentsControllerSwagger {
         description = "Notas já cadastradas",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))])
     @PostMapping("/grades-students")
-    fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>
+    fun createGrades(@RequestBody gradeRequest: Grade): ResponseEntity<StudentsResponse>
 
     @Operation(summary = "Buscar todas notas",
         description = "Endpoint responsável por retornar todas as notas dos estudantes",

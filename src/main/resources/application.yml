@@ -1,36 +1,45 @@
 spring:
-    jpa:
-        database: POSTGRESQL
-        hibernate:
-            ddl-auto: update
-    database:
-        DriverClassName: org.postgresql.Driver
-    datasource:
-        url: jdbc:postgresql://localhost:5432/postgres
-        username: postgres
-        password: password
-        platform: postgres
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+  database:
+    DriverClassName: org.postgresql.Driver
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+    platform: postgres
 
 springdoc:
-    swagger-ui:
-        path: /swagger-ui.html
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,mappings,prometheus"
+  endpoint:
+    prometheus:
+      enabled: true
 
 resilience4j.circuitbreaker:
-    instances:
-        studentsService:
-            waitDurationInOpenState: 1000ms
-            minimumNumberOfCalls: 3
-            slidingWindowSize: 6
+  instances:
+    studentsService:
+      waitDurationInOpenState: 1000ms
+      minimumNumberOfCalls: 3
+      slidingWindowSize: 6
 resilience4j.retry:
-    instances:
-        studentsRetry:
-            maxAttempts: 3
-            waitDuration: 400ms
-            retryExceptions:
-                - feign.RetryableException
-                - feign.FeignException.FeignServerException
-                - feign.FeignException.InternalServerError
-                - feign.FeignException.ServiceUnavailable
+  instances:
+    studentsRetry:
+      maxAttempts: 3
+      waitDuration: 400ms
+      retryExceptions:
+        - feign.RetryableException
+        - feign.FeignException.FeignServerException
+        - feign.FeignException.InternalServerError
+        - feign.FeignException.ServiceUnavailable
 feign:
-    grades-service:
-        url: localhost:8081/grades-students
+  grades-service:
+    url: localhost:8081/grades-students
