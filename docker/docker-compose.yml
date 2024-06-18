@@ -1,12 +1,5 @@
 version: "3.3"
 
-networks:
-  aw-network:
-    driver: bridge
-volumes:
-  prometheus_data:
-  grafana_data:
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -17,8 +10,10 @@ services:
       - "5432:5432"
   prometheus:
     image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./config/prometheus.yml:/etc/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     networks:
       - aw-network
@@ -30,3 +25,10 @@ services:
       - "3000:3000"
     networks:
       - aw-network
+
+networks:
+  aw-network:
+    driver: bridge
+volumes:
+  prometheus_data:
+  grafana_data:
