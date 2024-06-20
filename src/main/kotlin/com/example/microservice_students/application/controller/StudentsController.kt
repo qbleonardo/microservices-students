@@ -2,7 +2,7 @@ package com.example.microservice_students.application.controller
 
 import com.example.microservice_students.application.controller.request.UpdateDateBirthRequest
 import com.example.microservice_students.application.controller.response.StudentsResponse
-import com.example.microservice_students.domain.model.Grades
+import com.example.microservice_students.domain.model.Grade
 import com.example.microservice_students.domain.model.Student
 import com.example.microservice_students.domain.service.GradesService
 import com.example.microservice_students.domain.service.StudentsService
@@ -69,8 +69,8 @@ class StudentsController(private var studentsService: StudentsService,
     }
 
     @PostMapping("/grades-students")
-    override fun createGrades(@RequestBody gradesRequest: Grades): ResponseEntity<StudentsResponse>{
-        val gradesResponse = gradesService.executeCreateGrade(gradesRequest)
+    override fun createGrades(@RequestBody gradeRequest: Grade): ResponseEntity<StudentsResponse>{
+        val gradesResponse = gradesService.executeCreateGrade(gradeRequest)
 
         return ResponseEntity
             .status(HttpStatus.CREATED)

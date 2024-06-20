@@ -1,6 +1,6 @@
 package com.example.microservice_students.domain.service
 
-import com.example.microservice_students.domain.model.Grades
+import com.example.microservice_students.domain.model.Grade
 import com.example.microservice_students.domain.model.enum.SubjectEnum
 import com.example.microservice_students.resource.feign.GradesStudentsFeign
 import com.example.microservice_students.resource.log.LogFactory.log
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service
 @CircuitBreaker(name = "studentsService")
 class GradesService(private var gradesStudentsFeign: GradesStudentsFeign) {
 
-    fun executeCreateGrade(gradesRequest: Grades): Grades {
+    fun executeCreateGrade(gradeRequest: Grade): Grade {
         log.info("Realizando chamada ao serviço de notas para cadastrado de nota")
 
-        SubjectEnum.validateSubject(gradesRequest.subject)
-        return gradesStudentsFeign.createGradesToStudents(gradesRequest)
+        SubjectEnum.validateSubject(gradeRequest.subject)
+        return gradesStudentsFeign.createGradesToStudents(gradeRequest)
     }
 
-    fun executeGetAllGrades(page: Int, pageSize: Int): List<Grades> {
+    fun executeGetAllGrades(page: Int, pageSize: Int): List<Grade> {
         log.info("Realizando chamada ao serviço de notas para buscar todas as notas")
 
         return gradesStudentsFeign.getAllGrades(page, pageSize)

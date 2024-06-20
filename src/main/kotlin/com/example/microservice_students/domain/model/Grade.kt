@@ -2,7 +2,7 @@ package com.example.microservice_students.domain.model
 
 import jakarta.validation.constraints.NotBlank
 
-data class Grades(
+data class Grade(
         var id: Long,
         @field:NotBlank(message = "Campo nome não pode ser vazio")
         var studentName: String,
